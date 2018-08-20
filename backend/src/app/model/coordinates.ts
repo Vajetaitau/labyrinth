@@ -45,6 +45,10 @@ export default class Coordinates {
 		return new Coordinates(this.x - 1, this.y);
 	}
 
+	hasSameCoordinates(coord: Coordinates) {
+		return this.x === coord.x && this.y === coord.y;
+	}
+
 	get x(): number {
 		return this._x;
 	}

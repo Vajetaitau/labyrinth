@@ -20,19 +20,23 @@ export default class BacktrackPoint extends Point {
 
 	getAvailableOptions(): Array<Direction> {
 		const options = [];
-		if (this.north === DirectionStatus.OPEN && this._backtrackNorth === BacktrackStatus.NOT_VISITED_CHILD) {
+		if (this.isOpen(this.north) && this._backtrackNorth === BacktrackStatus.NOT_VISITED_CHILD) {
 			options.push(Direction.NORTH);
 		}
-		if (this.south === DirectionStatus.OPEN && this._backtrackSouth === BacktrackStatus.NOT_VISITED_CHILD) {
+		if (this.isOpen(this.south) && this._backtrackSouth === BacktrackStatus.NOT_VISITED_CHILD) {
 			options.push(Direction.SOUTH);
 		}
-		if (this.east === DirectionStatus.OPEN && this._backtrackEast === BacktrackStatus.NOT_VISITED_CHILD) {
+		if (this.isOpen(this.east) && this._backtrackEast === BacktrackStatus.NOT_VISITED_CHILD) {
 			options.push(Direction.EAST);
 		}
-		if (this.west === DirectionStatus.OPEN && this._backtrackWest === BacktrackStatus.NOT_VISITED_CHILD) {
+		if (this.isOpen(this.west) && this._backtrackWest === BacktrackStatus.NOT_VISITED_CHILD) {
 			options.push(Direction.WEST);
 		}
 		return options;
+	}
+
+	private isOpen(directionStatus: DirectionStatus) {
+		return directionStatus === DirectionStatus.OPEN || directionStatus === DirectionStatus.OPEN_TRANSITION_STAGE;
 	}
 
 	parentDirection(): Direction {

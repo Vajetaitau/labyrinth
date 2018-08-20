@@ -7,10 +7,14 @@ import NextPointFactory from "../factory/next-point-factory";
 
 class GenerationService {
 
-	public async fillUpSpace(coord: Coordinates, radius: number) {
-		const centralPoint = await labyrinthRepo.getPoint(coord.x, coord.y);
-		// gaunam tašką
-	}
+	// public async fillUpSpace(coord: Coordinates, radius: number, stepCount: number) {
+	// 	let openPoint = await backtrackRepo.getRandomOpenForGenerationPoint(coord, radius);
+	// 	while (openPoint != null) {
+	// 		const otherPoint = null;
+	// 		await this.connectPointsNew(openPoint, otherPoint, stepCount);
+	// 		openPoint = await backtrackRepo.getRandomOpenForGenerationPoint(coord, radius);
+	// 	}
+	// }
 
 	public async connectPointsNew(startCoord: Coordinates, endCoord: Coordinates, tooFar: number) {
 		await this.makeMoves(startCoord, startCoord, endCoord, 0, tooFar);
@@ -26,6 +30,7 @@ class GenerationService {
 			const newPoint = await this.move(currentPoint, nextMoveDirection, startCoord, endCoord, tooFar);
 			nextPoint = newPoint;
 		} else {
+			console.log(currentPoint);
 			nextPoint = currentPoint.parentCoord();
 		}
 
@@ -59,11 +64,10 @@ class GenerationService {
 		}
 	}
 
-	private async cleanState() {
-		// let's not clean OPEN_BUT_TOO_FAR, so we can fill the labyrinth in a better way later
-		// await labyrinthRepo.cleanState();
+	public async cleanState() {
+		await labyrinthRepo.updateState();
 		await backtrackRepo.cleanState();
 	}
 }
 
-export let pointConnectionService = new GenerationService();
+export let generationService = new GenerationService();

@@ -5,9 +5,7 @@
     "license": "UNLICENSED",
     "author": "Karolis Tarasaitis <karolistarasaitis@gmail.com>",
     "scripts": {
-        "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
-        "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-        "develop-on-build": "nodemon ./dist/bundle.js",
+        "build": "webpack --progress --hide-modules",
         "develop-on-save": "webpack --watch",
         "test": "mocha ./test/**/*-test.ts --require ts-node/register",
         "init-tables": "ts-node ./src/init/init-tables.ts",

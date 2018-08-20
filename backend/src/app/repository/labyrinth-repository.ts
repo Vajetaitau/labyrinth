@@ -142,7 +142,7 @@ class LabyrinthRepo {
 			.executeInAsyncTransaction();
 	}
 
-	public async cleanState() {
+	public async updateState() {
 		await new QueryBuilder()
 			.addQuery(
 				"update labyrinth  " +
@@ -150,7 +150,15 @@ class LabyrinthRepo {
 				"where north = $1  "
 				, res => {
 				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN]
+				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
+			)
+			.addQuery(
+				"update labyrinth  " +
+				"set north = $2    " +
+				"where north = $1  "
+				, res => {
+				}
+				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
 			)
 			.addQuery(
 				"update labyrinth  " +
@@ -158,7 +166,15 @@ class LabyrinthRepo {
 				"where south = $1  "
 				, res => {
 				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN]
+				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
+			)
+			.addQuery(
+				"update labyrinth  " +
+				"set south = $2    " +
+				"where south = $1  "
+				, res => {
+				}
+				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
 			)
 			.addQuery(
 				"update labyrinth  " +
@@ -166,7 +182,15 @@ class LabyrinthRepo {
 				"where east = $1  "
 				, res => {
 				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN]
+				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
+			)
+			.addQuery(
+				"update labyrinth  " +
+				"set east = $2    " +
+				"where east = $1  "
+				, res => {
+				}
+				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
 			)
 			.addQuery(
 				"update labyrinth  " +
@@ -174,7 +198,15 @@ class LabyrinthRepo {
 				"where west = $1  "
 				, res => {
 				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN]
+				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
+			)
+			.addQuery(
+				"update labyrinth  " +
+				"set west = $2    " +
+				"where west = $1  "
+				, res => {
+				}
+				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
 			)
 			.executeInAsyncTransaction();
 	}

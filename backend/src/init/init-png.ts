@@ -35,7 +35,7 @@ loadRows(allLabyrinthPoints, 50, 0).then(() => {
 		}
 
 		function paintConnection(coord: Coordinates, status: DirectionStatus) {
-			if (status === DirectionStatus.OPEN || status === DirectionStatus.OPEN_BUT_TOO_FAR) {
+			if (status !== DirectionStatus.CLOSED) {
 				paintPath(coord);
 			} else {
 				paintWall(coord);
