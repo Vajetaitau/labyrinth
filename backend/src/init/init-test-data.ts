@@ -46,7 +46,7 @@ new QueryBuilder()
 		"(1, -1, 'CLOSED', 'CLOSED', 'OPEN', 'OPEN'), " +
 		"(2, -1, 'OPEN', 'CLOSED', 'CLOSED', 'OPEN'), " +
 		"(2, 0, 'CLOSED', 'OPEN', 'OPEN', 'CLOSED'), " +
-		"(3, 0, 'CLOSED', 'CLOSED', 'OPEN', 'OPEN')"
+		"(3, 0, 'CLOSED', 'CLOSED', 'OPEN_END', 'OPEN')"
 		, (res) => {
 			console.log(res);
 		}

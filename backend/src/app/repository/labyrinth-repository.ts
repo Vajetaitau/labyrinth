@@ -5,6 +5,7 @@ import Direction from "../enum/direction-enum";
 import DirectionStatus from "../enum/direction-status-enum";
 import BacktrackStatus from "../enum/backtrack-status-enum";
 import {backtrackRepo} from "./backtrack-repository";
+import Coordinates from "../model/coordinates";
 
 class LabyrinthRepo {
 	public getPoint(x: number, y: number): Promise<BacktrackPoint> {
@@ -77,10 +78,9 @@ class LabyrinthRepo {
 			});
 	}
 
-	public async saveNewPoint(point: BacktrackPoint, neighboars: Array<Direction>) {
+	async saveNewPoint(point: BacktrackPoint, neighboars: Array<Direction>) {
 		const queryBuilder = new QueryBuilder();
 		const parentDirection = point.parentDirection();
-		const parent = point.parentCoord();
 
 		for (const neigboarDirection of neighboars) {
 			if (neigboarDirection !== parentDirection) {
@@ -106,17 +106,30 @@ class LabyrinthRepo {
 						},
 						[neighboarCoord.x, neighboarCoord.y, BacktrackStatus.CLOSED]
 					);
+			} else {
+				const parent = point.parentCoord();
+				queryBuilder
+					.addQuery(
+						"update labyrinth                                                  " +
+						"set " + Direction.oposite(parentDirection).toLowerCase() + " = $3 " +
+						"where x = $1                                                      " +
+						"and y = $2                                                        "
+						, res => {
+							// console.log(res);
+						},
+						[parent.x, parent.y, DirectionStatus.OPEN]
+					)
+					.addQuery(
+						backtrackRepo.updateToVisitedChildQuery(Direction.oposite(parentDirection))
+						, res => {
+							// console.log(res);
+						},
+						[parent.x, parent.y, BacktrackStatus.VISITED_CHILD]
+					);
 			}
 		}
 
 		await queryBuilder
-			.addQuery(
-				backtrackRepo.updateToVisitedChildQuery(Direction.oposite(parentDirection))
-				, res => {
-					// console.log(res);
-				},
-				[parent.x, parent.y, BacktrackStatus.VISITED_CHILD]
-			)
 			.addQuery(
 				"insert into                                  " +
 				"labyrinth(x, y, north, south, east, west)    " +
@@ -142,73 +155,34 @@ class LabyrinthRepo {
 			.executeInAsyncTransaction();
 	}
 
-	public async updateState() {
-		await new QueryBuilder()
-			.addQuery(
-				"update labyrinth  " +
-				"set north = $2    " +
-				"where north = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
-			)
-			.addQuery(
-				"update labyrinth  " +
-				"set north = $2    " +
-				"where north = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
-			)
-			.addQuery(
-				"update labyrinth  " +
-				"set south = $2    " +
-				"where south = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
-			)
-			.addQuery(
-				"update labyrinth  " +
-				"set south = $2    " +
-				"where south = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
-			)
-			.addQuery(
-				"update labyrinth  " +
-				"set east = $2    " +
-				"where east = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
-			)
-			.addQuery(
-				"update labyrinth  " +
-				"set east = $2    " +
-				"where east = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
-			)
-			.addQuery(
-				"update labyrinth  " +
-				"set west = $2    " +
-				"where west = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_TRANSITION_STAGE, DirectionStatus.OPEN_FINAL_STAGE]
-			)
-			.addQuery(
-				"update labyrinth  " +
-				"set west = $2    " +
-				"where west = $1  "
-				, res => {
-				}
-				, [DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_TRANSITION_STAGE]
-			)
-			.executeInAsyncTransaction();
+	async updateState() {
+		const northQuery =
+			"update labyrinth  " +
+			"set north = $2    " +
+			"where north = $1  ";
+		const southQuery =
+			"update labyrinth  " +
+			"set south = $2    " +
+			"where south = $1  ";
+		const eastQuery =
+			"update labyrinth  " +
+			"set east = $2     " +
+			"where east = $1   ";
+		const westQuery =
+			"update labyrinth  " +
+			"set west = $2     " +
+			"where west = $1   ";
+		const queryArray = [northQuery, southQuery, eastQuery, westQuery];
+		const updateArray = [
+			[DirectionStatus.OPEN_BUT_TOO_FAR, DirectionStatus.OPEN_END]
+		];
+		const queryBuilder = new QueryBuilder();
+		queryArray.forEach(query => {
+			updateArray.forEach(updateValues => {
+				queryBuilder.addQuery(query, res => {}, updateValues);
+			});
+		});
+		await queryBuilder.executeInAsyncTransaction();
 	}
 
 }

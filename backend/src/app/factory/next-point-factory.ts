@@ -43,7 +43,7 @@ export default class NextPointFactory {
 		} else if (this.endCoordsAreTooFar()) {
 			return DirectionStatus.OPEN_BUT_TOO_FAR;
 		} else {
-			return DirectionStatus.OPEN;
+			return DirectionStatus.OPEN_END;
 		}
 	}
 
@@ -60,7 +60,7 @@ export default class NextPointFactory {
 			Math.sqrt(
 				Math.pow(this._endCoord.y - this._startCoord.y, 2)
 				+ Math.pow(this._endCoord.x - this._startCoord.x, 2)
-			)
+			);
 		// middle point of that line
 		const middlePoint = new Coordinates(
 			(this._startCoord.x + this._endCoord.x) / 2,

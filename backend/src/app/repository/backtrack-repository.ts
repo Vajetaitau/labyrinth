@@ -25,10 +25,11 @@ class BacktrackRepo {
 	async getRandomOpenForGenerationPoint(point: Coordinates, radius: number) {
 		const countResult = await new QueryBuilder()
 			.query(
-				"select count(*) as count                             " +
-				"from labyrinth as l                                  " +
-				"where sqrt(pow(l.x - $1, 2) + pow(l.y - $2, 2)) < $3 "
-				, [point.x, point.y, radius]
+				"select count(*) as count                                " +
+				"from labyrinth as l                                     " +
+				"where sqrt(pow(l.x - $1, 2) + pow(l.y - $2, 2)) < $3    " +
+				"and (north = $4 or south = $4 or east = $4 or west = $4)"
+				, [point.x, point.y, radius, DirectionStatus.OPEN_END]
 			);
 		const count = countResult.rows[0].count;
 		if (count > 0) {
@@ -39,7 +40,7 @@ class BacktrackRepo {
 					"where sqrt(pow(l.x - $1, 2) + pow(l.y - $2, 2)) < $3     " +
 					"and (north = $5 or south = $5 or east = $5 or west = $5) " +
 					"offset floor(random() * $4) limit 1                      "
-					, [point.x, point.y, radius, count, DirectionStatus.OPEN_BUT_TOO_FAR]
+					, [point.x, point.y, radius, count, DirectionStatus.OPEN_END]
 				);
 			const row = queryResult.rows[0];
 			return new Point(row.x, row.y, row.north, row.south, row.east, row.west);

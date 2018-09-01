@@ -10,25 +10,24 @@ let angle: number;
 let coords: Coordinates;
 const startCoordinates = new Coordinates(0, 0);
 
-init().then(() => {
-	generate(50);
-		// .then(async function () {
-		// 	await generationService.fillUpSpace(startCoordinates, 50, 5);
-		// });
-});
+generationService.fillUpSpace(startCoordinates, 50, 5);
+
+// init().then(() => {
+// 	generate(50);
+// });
 
 async function init() {
 	await generationService.cleanState();
 	angle = 360;
 	coords = spiralFactory.getSpiralCoords(angle);
-	await generationService.connectPointsNew(startCoordinates, coords, tooFar);
+	await generationService.connectPoints(startCoordinates, coords, tooFar);
 }
 
 async function generate(times: number) {
 	for (let i = 0; i < times; i++) {
 		angle = getNextAngle();
 		const nextCoords = spiralFactory.getSpiralCoords(angle);
-		await generationService.connectPointsNew(coords, nextCoords, tooFar);
+		await generationService.connectPoints(coords, nextCoords, tooFar);
 		coords = nextCoords;
 		console.log(coords.x, coords.y);
 	}

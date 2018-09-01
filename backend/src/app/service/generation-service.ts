@@ -7,21 +7,23 @@ import NextPointFactory from "../factory/next-point-factory";
 
 class GenerationService {
 
-	// public async fillUpSpace(coord: Coordinates, radius: number, stepCount: number) {
-	// 	let openPoint = await backtrackRepo.getRandomOpenForGenerationPoint(coord, radius);
-	// 	while (openPoint != null) {
-	// 		const otherPoint = null;
-	// 		await this.connectPointsNew(openPoint, otherPoint, stepCount);
-	// 		openPoint = await backtrackRepo.getRandomOpenForGenerationPoint(coord, radius);
-	// 	}
-	// }
+	public async fillUpSpace(coord: Coordinates, radius: number, stepCount: number) {
+		let openPoint = await backtrackRepo.getRandomOpenForGenerationPoint(coord, radius);
+		console.log(openPoint.x, openPoint.y);
+		const unreachableCoord = new Coordinates(999999, 999999);
+		while (openPoint != null) {
+			await this.connectPoints(openPoint, unreachableCoord, stepCount, stepCount);
+			openPoint = await backtrackRepo.getRandomOpenForGenerationPoint(coord, radius);
+			console.log(openPoint.x, openPoint.y);
+		}
+	}
 
-	public async connectPointsNew(startCoord: Coordinates, endCoord: Coordinates, tooFar: number) {
-		await this.makeMoves(startCoord, startCoord, endCoord, 0, tooFar);
+	public async connectPoints(startCoord: Coordinates, endCoord: Coordinates, tooFar: number, stepLimit = 999999) {
+		await this.makeMoves(startCoord, startCoord, endCoord, 0, tooFar, stepLimit);
 		await this.cleanState();
 	}
 
-	private async makeMoves(currentCoord: Coordinates, startCoord: Coordinates, endCoord: Coordinates, i: number, tooFar: number): Promise<Coordinates> {
+	private async makeMoves(currentCoord: Coordinates, startCoord: Coordinates, endCoord: Coordinates, i: number, tooFar: number, stepLimit: number): Promise<Coordinates> {
 		const currentPoint = await labyrinthRepo.getPoint(currentCoord.x, currentCoord.y);
 		const options = currentPoint.getAvailableOptions();
 		let nextPoint;
@@ -30,14 +32,13 @@ class GenerationService {
 			const newPoint = await this.move(currentPoint, nextMoveDirection, startCoord, endCoord, tooFar);
 			nextPoint = newPoint;
 		} else {
-			console.log(currentPoint);
 			nextPoint = currentPoint.parentCoord();
 		}
 
-		if (nextPoint.hasSameCoordinates(endCoord)/*|| i > 1000*/) {
+		if (nextPoint.hasSameCoordinates(endCoord) || i > stepLimit) {
 			return nextPoint;
 		} else {
-			return await this.makeMoves(nextPoint, startCoord, endCoord, i + 1, tooFar);
+			return await this.makeMoves(nextPoint, startCoord, endCoord, i + 1, tooFar, stepLimit);
 		}
 	}
 

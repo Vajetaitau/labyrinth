@@ -36,7 +36,7 @@ export default class BacktrackPoint extends Point {
 	}
 
 	private isOpen(directionStatus: DirectionStatus) {
-		return directionStatus === DirectionStatus.OPEN || directionStatus === DirectionStatus.OPEN_TRANSITION_STAGE;
+		return directionStatus === DirectionStatus.OPEN || directionStatus === DirectionStatus.OPEN_END;
 	}
 
 	parentDirection(): Direction {
