@@ -10,7 +10,7 @@ let angle: number;
 let coords: Coordinates;
 const startCoordinates = new Coordinates(0, 0);
 
-generationService.fillUpSpace(startCoordinates, 50, 5);
+generationService.fillUpSpace(startCoordinates, 100, 7);
 
 // init().then(() => {
 // 	generate(50);

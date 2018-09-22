@@ -4,6 +4,7 @@ import NextMoveDirectionFactory from "../factory/next-move-direction-factory";
 import {backtrackRepo} from "../repository/backtrack-repository";
 import Direction from "../enum/direction-enum";
 import NextPointFactory from "../factory/next-point-factory";
+import DirectionUtils from "../utils/direction-utils";
 
 class GenerationService {
 
@@ -53,7 +54,7 @@ class GenerationService {
 			const neighbours = await labyrinthRepo.getNeighbourDirections(newCoord.x, newCoord.y);
 			const nextPointFactory = new NextPointFactory(
 				newCoord,
-				Direction.oposite(moveTo),
+				DirectionUtils.opposite(moveTo),
 				neighbours,
 				startCoord,
 				endCoord,

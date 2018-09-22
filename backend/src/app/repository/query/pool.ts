@@ -1,5 +1,6 @@
-import { Pool } from "pg";
-export default new Pool({
+import {Pool} from "pg";
+
+export let pool = new Pool({
 	user: "postgres",
 	host: "localhost",
 	database: "test_labyrinth",
