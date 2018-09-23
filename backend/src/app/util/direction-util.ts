@@ -1,6 +1,6 @@
 import Direction from "../enum/direction-enum";
 
-class DirectionUtils {
+class DirectionUtil {
 	static values(): Array<Direction> {
 		return [Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST];
 	}
@@ -18,4 +18,4 @@ class DirectionUtils {
 	}
 }
 
-export default DirectionUtils;
+export default DirectionUtil;

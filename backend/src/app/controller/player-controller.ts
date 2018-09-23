@@ -1,18 +1,23 @@
 import io from "../app";
-import BaseControllerInt from "./base-controller-int";
-import { playingService } from "../service/playing-service";
+import BaseController from "./base-controller";
+import {playingService} from "../service/playing-service";
 
-class PlayerController extends BaseControllerInt {
+class PlayerController extends BaseController {
 
-	onPlayerConnection() {
-		io.on("connection", function () {
-			playingService.getPlayer("Vajetaitau");
-			console.log("Connection!");
+	getPlayer() {
+		io.on("connection", function(socket) {
+			socket.on("PlayerController_GetPlayer", async function () {
+				socket.playerName = "Vajetaitau";
+				const player = await playingService.getPlayer(socket.playerName);
+				console.log(player);
+				socket.emit("PlayerController_GetPlayer_Response", player);
+			});
 		});
+
 	}
 
 	register() {
-		this.onPlayerConnection();
+		this.getPlayer();
 	}
 }
 

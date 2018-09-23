@@ -1,12 +1,12 @@
 import {describe, it} from "mocha";
 import {assert} from "chai";
 import Direction from "../../app/enum/direction-enum";
-import DirectionUtils from "../../app/utils/direction-utils";
+import DirectionUtil from "../../app/util/direction-util";
 
 describe("Direction", function () {
 	describe("#values", function () {
 		it("Should return 4 values", function () {
-			const values = DirectionUtils.values();
+			const values = DirectionUtil.values();
 			const expectedValues = [
 				Direction.NORTH,
 				Direction.SOUTH,

@@ -5,7 +5,7 @@ import Direction from "../enum/direction-enum";
 import DirectionStatus from "../enum/direction-status-enum";
 import BacktrackStatus from "../enum/backtrack-status-enum";
 import {backtrackRepo} from "./backtrack-repository";
-import DirectionUtils from "../utils/direction-utils";
+import DirectionUtil from "../util/direction-util";
 
 class LabyrinthRepo {
 	public getPoint(x: number, y: number): Promise<BacktrackPoint> {
@@ -88,7 +88,7 @@ class LabyrinthRepo {
 				queryBuilder
 					.addQuery(
 						"update labyrinth                                                       " +
-						"set " + DirectionUtils.opposite(neigboarDirection).toLowerCase() + " = $3    " +
+						"set " + DirectionUtil.opposite(neigboarDirection).toLowerCase() + " = $3    " +
 						"where x = $1                                                           " +
 						"and y = $2                                                             "
 						, res => {
@@ -98,7 +98,7 @@ class LabyrinthRepo {
 					)
 					.addQuery(
 						"update backtrack_info                                                  " +
-						"set " + DirectionUtils.opposite(neigboarDirection).toLowerCase() + " = $3    " +
+						"set " + DirectionUtil.opposite(neigboarDirection).toLowerCase() + " = $3    " +
 						"where x = $1                                                           " +
 						"and y = $2                                                             "
 						, res => {
@@ -111,7 +111,7 @@ class LabyrinthRepo {
 				queryBuilder
 					.addQuery(
 						"update labyrinth                                                  " +
-						"set " + DirectionUtils.opposite(parentDirection).toLowerCase() + " = $3 " +
+						"set " + DirectionUtil.opposite(parentDirection).toLowerCase() + " = $3 " +
 						"where x = $1                                                      " +
 						"and y = $2                                                        "
 						, res => {
@@ -120,7 +120,7 @@ class LabyrinthRepo {
 						[parent.x, parent.y, DirectionStatus.OPEN]
 					)
 					.addQuery(
-						backtrackRepo.updateToVisitedChildQuery(DirectionUtils.opposite(parentDirection))
+						backtrackRepo.updateToVisitedChildQuery(DirectionUtil.opposite(parentDirection))
 						, res => {
 							// console.log(res);
 						},

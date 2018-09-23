@@ -2,6 +2,7 @@ import * as express from "express";
 import * as http from "http";
 import * as IO from "socket.io";
 import {playerController} from "./controller/player-controller";
+import {movingController} from "./controller/moving-controller";
 
 const app = express();
 const server = http.createServer(app);
@@ -17,4 +18,5 @@ app.get("/", function (req, res) {
 export default io;
 
 playerController.register();
+movingController.register();
 

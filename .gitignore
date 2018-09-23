@@ -1,4 +1,4 @@
-
 backend/\.idea/
-
 backend/test\.png
+frontend/\.idea/
+node_modules/

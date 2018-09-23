@@ -1,0 +1,15 @@
+<p>
+	labyrinth works!
+</p>
+
+Player name: _{{ player.name }}_
+
+<input (keyup.w)="moveNorth()" (keyup.s)="moveSouth()" (keyup.a)="moveWest()" (keyup.d)="moveEast()">
+<div *ngFor="let move of moves">
+	{{ move.playerName }}
+	{{ move.newPosition.x }}
+	{{ move.newPosition.y }}
+</div>
+
+{{ moveCount }}
+{{ responseCount }}

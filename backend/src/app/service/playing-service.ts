@@ -14,16 +14,7 @@ class PlayingService {
 		return await playerRepo.getVisiblePoints(player);
 	}
 
-	public async move(player: string, direction: Direction): Promise<Point> {
-		const currentPoint = await playerRepo.getPlayerPoint(player);
-		if (currentPoint.statusInDirection(direction) === DirectionStatus.OPEN) {
-			const nextCoords = currentPoint.pointInDirection(direction);
-			await playerRepo.move(player, nextCoords.x, nextCoords.y);
-			return await playerRepo.getPlayerPoint(player);
-		} else {
-			return currentPoint;
-		}
-	}
+
 }
 
 export const playingService = new PlayingService();
